@@ -128,32 +128,24 @@ export function togglePinIcon (id) {
 export function displayChatLogOnScreen (target, dataArray) {
   target.innerHTML = ''
   dataArray.forEach(data => {
-    if (data.speakId === -1) {
-      target.insertAdjacentHTML('beforeend', `
-    <li class="list-group-item d-flex justify-content-end border-bottom">
-      <span class="h-100 w-100 text-end">${data.log}</span>
-    </li>
-    `)
-    } else {
-      target.insertAdjacentHTML('beforeend', `
+    let textAlignClass = ''
+    if (data.speakId === -1) textAlignClass = 'text-end'
+
+    target.insertAdjacentHTML('beforeend', `
       <li class="list-group-item d-flex border-bottom">
-        <span class="h-100 w-100">${data.log}</span>
+        <span class="h-100 w-100 ${textAlignClass}">${data.log}</span>
       </li>
       `)
-    }
   })
 }
 
 export function addOneMessageOnScreen (target, message, friendReply = false) {
-  friendReply === true
-    ? target.insertAdjacentHTML('beforeend', `
+  let textAlignClass = ''
+  if (!friendReply) textAlignClass = 'text-end'
+
+  target.insertAdjacentHTML('beforeend', `
     <li class="list-group-item d-flex border-bottom">
-      <span class="h-100 w-100">${message}</span>
-    </li>
-    `)
-    : target.insertAdjacentHTML('beforeend', `
-    <li class="list-group-item d-flex justify-content-end border-bottom">
-      <span class="h-100 w-100 text-end">${message}</span>
+      <span class="h-100 w-100 ${textAlignClass}">${message}</span>
     </li>
     `)
 }
@@ -167,11 +159,14 @@ export function toggleActiveClassForClickedFriend (id) {
 
 export function updateFriendNameInChatArea (target, dataArray) {
   target.innerHTML = ''
-  dataArray.online
-    ? target.insertAdjacentHTML('afterbegin', `
-    <span class="ps-3 w-100 hako-friend-name bg-success">${dataArray.name} ${dataArray.surname}</span>
+
+  let textClass = ''
+  dataArray.online ? textClass = 'bg-success' : textClass = 'bg-light text-dark'
+  target.insertAdjacentHTML('afterbegin', `
+    <span class="ps-3 w-100 hako-friend-name ${textClass}">
+      ${dataArray.name} ${dataArray.surname}
+    </span>
     `)
-    : target.insertAdjacentHTML('afterbegin', `<span class="ps-3 w-100 hako-friend-name bg-light text-dark">${dataArray.name} ${dataArray.surname}</span>`)
 }
 
 export function displayChatConsole () {
