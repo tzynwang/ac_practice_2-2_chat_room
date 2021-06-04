@@ -24,7 +24,7 @@
   border-color: rgba(89, 120, 140, 1);
 }
 
-.list-group-item.active .hako-status {
+.list-group-item.active i {
   color: #212529;
 }
 
