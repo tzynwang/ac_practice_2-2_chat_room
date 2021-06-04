@@ -1,7 +1,13 @@
 import * as model from './model.js'
 
-export function displayCeremonyModal (target, todayString) {
+export function displayCeremonyModal (target, todayString, username) {
   target.innerHTML = ''
+
+  let message
+  username
+    ? message = `Hi ${username}! Today is ${todayString}, it's your special day!`
+    : message = `Today is ${todayString}, you've said this is a spacial day!`
+
   target.innerHTML = `
     <button type="button" id="ceremonyCard" class="visually-hidden" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></button>
 
@@ -13,7 +19,7 @@ export function displayCeremonyModal (target, todayString) {
           </div>
           <div class="modal-body d-flex flex-column align-items-center">
             <img src="../../images/undraw_Appreciation_re_p6rl.svg" alt="ceremony image" class="mb-3">
-            <p>Today is ${todayString}, you've said this is a spacial day!</p>
+            <p>${message}</p>
           </div>
         </div>
       </div>

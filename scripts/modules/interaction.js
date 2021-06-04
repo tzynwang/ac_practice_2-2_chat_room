@@ -60,7 +60,8 @@ export function checkIfCeremonyDate () {
 
   if (ceremonyDate === todayForCheck && config.hasDisplayCeremonyMessage === false) {
     const todayString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-    view.displayCeremonyModal(model.elementObject.ceremonyMessageContainer, todayString)
+    const username = config.username
+    view.displayCeremonyModal(model.elementObject.ceremonyMessageContainer, todayString, username)
     document.querySelector('#ceremonyCard').click()
 
     config.hasDisplayCeremonyMessage = true
@@ -163,7 +164,7 @@ export async function sendChatMessage (event) {
       const friendList = controller.retrieveFromLocalStorage('friendList')
       const friendData = friendList.find(friend => friend.id === nowChatWithId)
       if (friendData.online === true) {
-        const friendRepliesArray = await controller.getFriendReply(model.config.friendReplyNumber)
+        const friendRepliesArray = await controller.getFriendReply()
         await displayFriendChat(friendRepliesArray, allChatLog, nowChatWithId)
       }
     }
