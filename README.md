@@ -6,7 +6,7 @@ https://tzynwang.github.io/ac_practice_2-2_chat_room/
 ## 功能介紹
 - 在線上的朋友會即時回應任何聊天訊息
   ![auto reply demonstration](./images/README-img/autoReply.gif)
-  - 回應訊息透過 [Metaphorpsum](http://metaphorpsum.com/) 產生
+  - 回應訊息透過 [Bacon Ipsum JSON API](https://baconipsum.com/json-api/) 產生
   - 回應訊息中的emoji透過 [Open Emoji Api](https://emoji-api.com/) 取得
 - 可釘選（![pin-icon](./images/README-img/pin.svg)）特定朋友至左側訊息欄位最上方
   ![pin friend demonstration](./images/README-img/pinFriend.gif)
