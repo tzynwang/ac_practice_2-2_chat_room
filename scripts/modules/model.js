@@ -16,7 +16,7 @@ export const elementObject = {
 export const config = {
   friendListApi: 'https://lighthouse-user-api.herokuapp.com/api/v1/users',
   picsumApi: 'https://picsum.photos/v2/list',
-  replyMessageApi: 'https://baconipsum.com/api/',
+  replyMessageApi: 'http://metaphorpsum.com/sentences/',
   emojiApi: 'https://emoji-api.com/categories/smileys-emotion?access_key=64e32f2634c879f7b346c2c6492f80d853ca3090',
   minOnlineNumber: 5,
   maxOnlineNumber: 10,

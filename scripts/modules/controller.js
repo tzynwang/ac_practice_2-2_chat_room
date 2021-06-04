@@ -92,9 +92,9 @@ export function updatePinStatus (dataArray, id) {
   })
 }
 
-export async function getFriendReply (maxSentencesNumber) {
-  const actualFetchSentencesNumber = Math.floor(Math.random() * maxSentencesNumber) + 1
-  const replyText = await fetchData(`http://metaphorpsum.com/sentences/${actualFetchSentencesNumber}`)
+export async function getFriendReply () {
+  const actualFetchSentencesNumber = Math.floor(Math.random() * model.config.friendReplyNumber) + 1
+  const replyText = await fetchData(`${model.config.replyMessageApi}${actualFetchSentencesNumber}`)
 
   const sentences = splitParagraphToSentences(replyText.data)
   const emoji = await getEmoji()
