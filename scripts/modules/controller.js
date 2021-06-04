@@ -96,7 +96,7 @@ export async function getFriendReply () {
   const actualFetchSentencesNumber = Math.floor(Math.random() * model.config.friendReplyNumber) + 1
   const replyText = await fetchData(`${model.config.replyMessageApi}${actualFetchSentencesNumber}`)
 
-  const sentences = splitParagraphToSentences(replyText.data)
+  const sentences = splitParagraphToSentences(replyText.data[0])
   const emoji = await getEmoji()
 
   const sentencesWithEmoji = addEmojiToSentences(sentences, emoji)
@@ -104,8 +104,6 @@ export async function getFriendReply () {
 }
 
 function splitParagraphToSentences (paragraph) {
-  if (paragraph.length === 1) return paragraph
-
   const sentencesArray = paragraph.split('. ')
   const container = []
   sentencesArray.forEach((sentence, index) => {
