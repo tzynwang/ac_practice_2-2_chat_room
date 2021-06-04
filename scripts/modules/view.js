@@ -51,12 +51,10 @@ export function displayFriendList (dataArray, target, displayNickname) {
 
     target.insertAdjacentHTML('beforeend', `
     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-chat="${data.id}">
-      <span class="bi ${onlineStatusClass} d-inline-block"></span>
+      <i class="bi ${onlineStatusClass} d-inline-block"></i>
       <img src="${data.avatar}" alt="avatar" class="rounded-circle hako-avatar" data-id="${data.id}" data-bs-toggle="modal" data-bs-target="#friendModal">
       <span class="hako-name" data-chat="${data.id}">${displayName}</span>
-      <span class="hako-pin" data-pin="${data.id}">
-        <i class="bi ${pinIconClass}" data-pin="${data.id}"></i>
-      </span>
+      <i class="bi ${pinIconClass}" data-pin="${data.id}"></i>
     </li>
     `)
   })
@@ -123,8 +121,8 @@ export function setFriendModalBackgroundImage (dataArray) {
 }
 
 export function togglePinIcon (id) {
-  document.querySelector(`[data-pin="${id}"]`).children[0].classList.toggle('bi-pin-fill')
-  document.querySelector(`[data-pin="${id}"]`).children[0].classList.toggle('bi-pin')
+  document.querySelector(`[data-pin="${id}"]`).classList.toggle('bi-pin-fill')
+  document.querySelector(`[data-pin="${id}"]`).classList.toggle('bi-pin')
 }
 
 export function displayChatLogOnScreen (target, dataArray) {
