@@ -18,7 +18,7 @@ export function displayCeremonyModal (target, todayString, username) {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body d-flex flex-column align-items-center">
-            <img src="./ac_practice_2-2_chat_room/images/undraw_Appreciation_re_p6rl.svg" alt="ceremony image" class="mb-3">
+            <img src="./images/undraw_Appreciation_re_p6rl.svg" alt="ceremony image" class="mb-3">
             <p>${message}</p>
           </div>
         </div>
