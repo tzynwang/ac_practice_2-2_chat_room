@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+body {
+  background-color: #f2e6d7;
+}
+
+main {
+  background-color: #f2f2f2;
+}
+
+.hako-title-section, #ceremonyMessage {
+  font-family: 'Nanum Pen Script', cursive;
+}
+
+.hako-title-section {
+  letter-spacing: .5rem;
+}
+
+#ceremonyMessage img {
+  width: 100%;
+}
+
+#ceremonyMessage p {
+  font-size: 1.25rem;
+}
+
+.hako-container {
+  width: 600px;
+  height: 80vh;
+  border: 1px solid #000;
+  margin: 0 auto;
+}
+
+.hako-container section {
+  width: 50%;
+  overflow-y: auto;
+}
+
+.hako-online {
+  color: #85a540;
+}
+
+.hako-offline {
+  color: #d8c68f;
+}
+
+.hako-avatar {
+  width: 48px;
+}
+
+.hako-avatar:hover {
+  cursor: pointer;
+}
+
+.hako-name {
+  display: inline-block;
+  white-space: nowrap;
+  width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hako-name:hover {
+  cursor: default;
+}
+
+.hako-modal-background {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.hako-modal-background img {
+  width: 100%;
+  object-fit: none;
+  object-position: center bottom;
+}
+
+.hako-modal-avatar {
+  margin-top: -20%;
+  box-shadow: 0 0 1rem rgba(255, 255, 255, 0.8);
+}
+
+.hako-chat-icon i:hover, .hako-modal-name i:hover {
+  cursor: pointer;
+}
+
+.hako-friend-name-display {
+  height: 2rem;
+  line-height: 2rem;
+  background-color: #868e96;
+}
+
+.hako-msg-display {
+  height: calc(75% - 2rem);
+}
+
+.hako-msg-input {
+  height: 25%;
+}
+
+#messageInput {
+  height: 100%;
+  width: 100%;
+}
+
+#config {
+  width: 3rem;
+  background: rgba(1, 89, 89, 0.8);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#config i {
+  font-size: 1.75rem;
+}
+
+#config i:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="./style/bootstrap.min.css">
+  <link rel="stylesheet" href="./style/boostrap_overwrite.css">
+  <link rel="stylesheet" href="./style/style.css">
+  <link rel="icon" type="image/svg+xml" href="./images/heart-half.svg">
+  <title>HAKO</title>
+</head>
+
+<body>
+  <section class="my-3 text-center hako-title-section">
+    <h1>HAKO</h1>
+    <p class="text-uppercase fw-light">hug your hardcore <i class="bi bi-heart-half"></i></p>
+  </section>
+
+  <main class="hako-container d-flex">
+    <!-- friend list -->
+    <section id="friendList" class="list-group list-group-flush hako-friend-list">
+    </section>
+
+    <!-- friend modal -->
+    <div class="modal fade" id="friendModal" tabindex="-1" aria-labelledby="friendModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title h5" id="friendModalLabel"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chat area -->
+    <section id="chatArea">
+      <!-- when no chat -->
+      <div id="startChatHint" class="mt-5 d-flex flex-column align-items-center">
+        <i class="bi bi-chat-dots-fill fs-1"></i>
+        <span>click a friend, start to chat</span>
+      </div>
+      <!-- Friend Name -->
+      <div id="friendNameDisplay" class="d-none hako-friend-name-display text-light d-flex align-items-center">
+        <span class="ms-3 hako-status hako-online"></span>
+        <span class="hako-friend-name"></span>
+      </div>
+      <!-- message display area -->
+      <div id="messageDisplay" class="border-dark border-bottom overflow-auto d-none hako-msg-display"></div>
+      <!-- message input area -->
+      <div id="messageInputContainer" class="overflow-auto d-none hako-msg-input-container hako-msg-input">
+        <form id="messageInputForm" class="form-floating h-100" autocomplete="off">
+          <textarea id="messageInput" class="form-control"></textarea>
+          <label for="messageInput">Press Shift + Enter to send message:</label>
+          <button type="reset" id="messageInputFormResetBtn" class="visually-hidden"></button>
+        </form>
+      </div>
+    </section>
+
+    <!-- config -->
+    <section id="config" class="border-dark border-start d-flex flex-column justify-content-end align-items-center">
+      <i id="personalSettings" class="bi bi-gear-fill" data-bs-toggle="modal" data-bs-target="#personalSettingsPanel"></i>
+      <!-- config modal -->
+      <div class="modal fade" id="personalSettingsPanel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="personalSettingsPanelLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <p class="modal-title text-dark" id="personalSettingsPanelLabel">Settings</p>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="d-flex align-items-start text-dark my-3">
+              <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="personalSettingTab" data-bs-toggle="pill" data-bs-target="#personalSetting"
+                  type="button" role="tab" aria-controls="personalSetting" aria-selected="true">Personal</button>
+                <button class="nav-link" id="displaySettingTab" data-bs-toggle="pill" data-bs-target="#displaySetting"
+                  type="button" role="tab" aria-controls="displaySetting" aria-selected="false">Display</button>
+              </div>
+              <div class="tab-content w-75" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="personalSetting" role="tabpanel" aria-labelledby="personalSettingTab">
+                    <div class="mb-3">
+                      <label for="username" class="form-label">How should we call you?</label>
+                      <input type="text" class="form-control" id="username" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                      <label for="ceremony" class="form-label">Any ceremony date?</label>
+                      <input type="date" class="form-control" id="ceremony">
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="displaySetting" role="tabpanel" aria-labelledby="displaySettingTab">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="displayNickname">
+                    <label class="form-check-label" for="displayNickname">
+                      Display friend's nickname.
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="closeSettingPanel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" id="saveSettings" class="btn btn-primary">Save Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ceremony modal -->
+  <section id="ceremonyMessage"></section>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="./scripts/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="./scripts/index.js" type="module"></script>
+</body>
+
+</html>
