@@ -17,7 +17,4 @@ model.elementObject.friendList.addEventListener('click', event => {
 
 model.elementObject.messageInputForm.addEventListener('keydown', interaction.sendChatMessage)
 
-model.elementObject.settingBtn.addEventListener('click', () => {
-  interaction.displaySettingModalByConfig()
-  interaction.addEventListenerToSaveSettingBtn()
-})
+model.elementObject.settingBtn.addEventListener('click', interaction.setSettingModal)

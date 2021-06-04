@@ -186,12 +186,17 @@ export function pinFriend (id) {
   controller.updateLocalStorage('friendList', sortedFriendList)
 }
 
-export function displaySettingModalByConfig () {
+export function setSettingModal () {
+  displaySettingModalByConfig()
+  addEventListenerToSaveSettingBtn()
+}
+
+function displaySettingModalByConfig () {
   const config = controller.retrieveFromLocalStorage('hakoConfig')
   view.updateSettingModal(document.querySelector('#personalSettingsPanel'), config)
 }
 
-export function addEventListenerToSaveSettingBtn () {
+function addEventListenerToSaveSettingBtn () {
   document.querySelector('#saveSettings').addEventListener('click', () => {
     const username = document.querySelector('#username').value
     const ceremonyDate = document.querySelector('#ceremony').value
