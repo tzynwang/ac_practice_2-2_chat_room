@@ -187,8 +187,8 @@ export function scrollToBottom () {
   document.querySelector('#messageDisplay').scrollTop = document.querySelector('#messageDisplay').scrollHeight
 }
 
-export function scrollToTop (target) {
-  target.scroll(0, 0)
+export function scrollToTop () {
+  model.elementObject.friendList.scroll({ top: 0, left: 0, behavior: 'smooth' })
 }
 
 export function updateSettingModal (target, dataArray) {

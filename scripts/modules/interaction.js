@@ -174,7 +174,7 @@ export async function sendChatMessage (event) {
 export function pinFriend (id) {
   id = Number(id)
   view.togglePinIcon(id)
-  view.scrollToTop(model.elementObject.friendList)
+  view.scrollToTop()
 
   const friendList = controller.retrieveFromLocalStorage('friendList')
   controller.updatePinStatus(friendList, id)
