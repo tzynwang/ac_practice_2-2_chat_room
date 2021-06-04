@@ -103,16 +103,20 @@ main {
   width: 100%;
 }
 
-#config {
+#operationPanel {
   width: 3rem;
   background: rgba(1, 89, 89, 0.8);
   color: rgba(255, 255, 255, 0.7);
 }
 
-#config i {
+#operationPanel a {
+  color: rgba(255, 255, 255, 0.7)
+}
+
+#operationPanel i {
   font-size: 1.75rem;
 }
 
-#config i:hover {
+#operationPanel i:hover {
   cursor: pointer;
 }
