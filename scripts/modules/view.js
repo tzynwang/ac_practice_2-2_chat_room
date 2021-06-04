@@ -111,7 +111,7 @@ export function displayNameEditInput (target, id) {
   target.insertAdjacentHTML('beforebegin', `
   <div class="input-group input-group-sm mt-2">
     <span class="input-group-text visually-hidden" id="EditNicknameLabel">Small</span>
-    <input type="text" class="form-control" id="nicknameInput" aria-label="Edit nickname" aria-describedby="EditNicknameLabel" value="${name}">
+    <input type="text" class="form-control" id="nicknameInput" aria-label="Edit nickname" aria-describedby="EditNicknameLabel" value="${name}" autocomplete="off">
     <button class="btn btn-secondary" type="button" data-confirm-edit="${id}">Edit nickname</button>
   </div>
   `)
