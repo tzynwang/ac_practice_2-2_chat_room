@@ -1,5 +1,4 @@
-<h1 style="letter-spacing: .5rem;">HAKO<img src="./images/heart-half.svg"><h1>
-
+# HAKO ![hart-icon](./images/README-img/heart-half.svg)
 
 ## 專案連結
 https://tzynwang.github.io/ac_practice_2-2_chat_room/
