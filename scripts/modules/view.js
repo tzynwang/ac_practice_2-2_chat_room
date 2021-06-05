@@ -210,6 +210,10 @@ export function updateSettingModal (target, dataArray) {
         <div class="tab-content w-75" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="personalSetting" role="tabpanel" aria-labelledby="personalSettingTab">
               <div class="mb-3">
+                <label for="username" class="form-label">Maybe an avatar?</label>
+                <input type="file" class="form-control" id="userAvatarFile" accept="image/png, image/jpeg">
+              </div>
+              <div class="mb-3">
                 <label for="username" class="form-label">How should we call you?</label>
                 <input type="text" class="form-control" id="username" autocomplete="off" value="${username}">
               </div>
@@ -234,4 +238,26 @@ export function updateSettingModal (target, dataArray) {
       </div>
     </div>
   </div>`
+}
+
+export function displayUserAvatarModal (target, dataArray) {
+  let name
+  dataArray.username ? name = dataArray.username : name = 'your name here?'
+  target.innerHTML = ''
+  target.innerHTML = `
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column justify-content-center align-items-center text-dark">
+        <img id="UserAvatarModalImage" class="mb-3 hako-user-avatar-container">
+        <span>${name}</span>
+        <i id="editUserInfo" class="bi bi-pencil-square"></i>
+      </div>
+    </div>
+  </div>
+  `
+
+  if (dataArray.userAvatarBase64) document.querySelector('#UserAvatarModalImage').src = dataArray.userAvatarBase64
 }

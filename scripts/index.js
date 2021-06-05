@@ -17,4 +17,6 @@ model.elementObject.friendList.addEventListener('click', event => {
 
 model.elementObject.messageInputForm.addEventListener('keydown', interaction.sendChatMessage)
 
+model.elementObject.userAvatarBtn.addEventListener('click', interaction.setUserAvatarModal)
+
 model.elementObject.settingBtn.addEventListener('click', interaction.setSettingModal)

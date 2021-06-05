@@ -52,7 +52,7 @@ export function establishChatLogInLocalStorage () {
 
 export function establishConfigInLocalStorage () {
   if (!controller.retrieveFromLocalStorage('hakoConfig')) {
-    const hakoConfig = { username: '', ceremonyDate: '', displayNickname: true, hasDisplayCeremonyMessage: false }
+    const hakoConfig = { userAvatarBase64: '', username: '', ceremonyDate: '', displayNickname: true, hasDisplayCeremonyMessage: false }
     controller.saveToLocalStorage('hakoConfig', hakoConfig)
   }
 }
@@ -202,11 +202,25 @@ function displaySettingModalByConfig () {
   view.updateSettingModal(document.querySelector('#personalSettingsPanel'), config)
 }
 
+function saveImgToLocalStorageAsBase64 (avatarFile) {
+  const reader = new window.FileReader()
+  reader.readAsDataURL(avatarFile)
+  reader.onload = () => {
+    const config = controller.retrieveFromLocalStorage('hakoConfig')
+    config.userAvatarBase64 = reader.result
+    controller.updateLocalStorage('hakoConfig', config)
+  }
+}
+
 function addEventListenerToSaveSettingBtn () {
   document.querySelector('#saveSettings').addEventListener('click', () => {
+    const avatarFile = document.querySelector('#userAvatarFile').files[0]
+    if (avatarFile) saveImgToLocalStorageAsBase64(avatarFile)
+
     const username = document.querySelector('#username').value
     const ceremonyDate = document.querySelector('#ceremony').value
     const displayNickname = document.querySelector('#displayNickname').checked
+
     const config = controller.retrieveFromLocalStorage('hakoConfig')
 
     if (username.trim().length > 0) config.username = username
@@ -216,8 +230,27 @@ function addEventListenerToSaveSettingBtn () {
 
     const friendList = controller.retrieveFromLocalStorage('friendList')
     const displayNicknameFlag = controller.retrieveFromLocalStorage('hakoConfig').displayNickname
-    view.displayFriendList(friendList, model.elementObject.friendList, displayNicknameFlag)
+
+    const sortedFriendList = rePickOnlineFriends(friendList, 30)
+    view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNicknameFlag)
 
     document.querySelector('#closeSettingPanel').click()
+  })
+}
+
+export function setUserAvatarModal () {
+  displayUserAvatarModal()
+  addEventListenerToUserAvatarModalEditBtn()
+}
+
+function displayUserAvatarModal () {
+  const config = controller.retrieveFromLocalStorage('hakoConfig')
+  view.displayUserAvatarModal(document.querySelector('#userPersonalPanel'), config)
+}
+
+function addEventListenerToUserAvatarModalEditBtn () {
+  document.querySelector('#editUserInfo').addEventListener('click', () => {
+    document.querySelector('#userAvatar .btn-close').click()
+    model.elementObject.settingBtn.click()
   })
 }

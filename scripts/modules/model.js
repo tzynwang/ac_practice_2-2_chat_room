@@ -8,6 +8,7 @@ export const elementObject = {
   messageInputForm: document.querySelector('#messageInputForm'),
   messageInput: document.querySelector('#messageInput'),
   messageInputFormResetBtn: document.querySelector('#messageInputFormResetBtn'),
+  userAvatarBtn: document.querySelector('#userAvatar>i'),
   settingBtn: document.querySelector('#personalSettings'),
   personalSettingsPanel: document.querySelector('#personalSettingsPanel'),
   ceremonyMessageContainer: document.querySelector('#ceremonyMessage')
