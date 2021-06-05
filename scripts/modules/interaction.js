@@ -7,33 +7,40 @@ export async function loadFriendList () {
   let friendList = controller.retrieveFromLocalStorage('friendList')
 
   if (!friendList) {
-    const friends = await controller.fetchData(model.config.friendListApi)
-    // fetch background image's id
-    const picsums100 = await controller.fetchData(`${model.config.picsumApi}?page=1&limit=100`)
-    const picsums200 = await controller.fetchData(`${model.config.picsumApi}?page=1&limit=200`)
-    const picsums = picsums100.data.concat(picsums200.data)
-    friends.data.results.forEach(function (friend, index) {
-      friend.backgroundImageId = Number(picsums[index].id)
-    })
-    controller.saveToLocalStorage('friendList', friends.data.results)
-    friendList = controller.retrieveFromLocalStorage('friendList')
+    friendList = await generateFriendList()
   }
 
+  const sortedFriendList = rePickOnlineFriends(friendList, 30)
+  const displayNickname = controller.retrieveFromLocalStorage('hakoConfig').displayNickname
+  setTimeout(() => {
+    view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNickname)
+  }, 300)
+}
+
+async function generateFriendList () {
+  const friends = await controller.fetchData(model.config.friendListApi)
+  // fetch background image's id
+  const picsums100 = await controller.fetchData(`${model.config.picsumApi}?page=3&limit=100`)
+  const picsums200 = await controller.fetchData(`${model.config.picsumApi}?page=4&limit=100`)
+  const picsums = picsums100.data.concat(picsums200.data)
+  friends.data.results.forEach(function (friend, index) {
+    friend.backgroundImageId = Number(picsums[index].id)
+  })
+  controller.saveToLocalStorage('friendList', friends.data.results)
+  return controller.retrieveFromLocalStorage('friendList')
+}
+
+function rePickOnlineFriends (friendList, minutes) {
   const currentTimeStamp = Date.now()
   const lastUpdateTimeStamp = controller.retrieveFromLocalStorage('lastOnlineUserUpdateTimeStamp')
-  // re-pick online friends when last loading time is 10 minutes before
-  if (!lastUpdateTimeStamp || currentTimeStamp - lastUpdateTimeStamp > 600000) {
+
+  if (!lastUpdateTimeStamp || currentTimeStamp - lastUpdateTimeStamp > minutes * 60 * 1000) {
     const nowOnlineNumber = Math.floor(Math.random() * (model.config.maxOnlineNumber - model.config.minOnlineNumber)) + model.config.minOnlineNumber
     controller.updateOnlineFriend(friendList, nowOnlineNumber)
     controller.updateLocalStorage('lastOnlineUserUpdateTimeStamp', currentTimeStamp)
     controller.updateLocalStorage('friendList', friendList)
   }
-
-  const sortedFriendList = controller.sortFriendListByPinAndOnlineStatus(friendList)
-  const displayNickname = controller.retrieveFromLocalStorage('hakoConfig').displayNickname
-  setTimeout(() => {
-    view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNickname)
-  }, 300)
+  return controller.sortFriendListByPinAndOnlineStatus(friendList)
 }
 
 export function establishChatLogInLocalStorage () {
