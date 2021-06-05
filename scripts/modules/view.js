@@ -173,6 +173,7 @@ export function displayChatConsole () {
   model.elementObject.startChatHint.classList.add('d-none')
   model.elementObject.friendNameChatTo.classList.remove('d-none')
   model.elementObject.messageDisplay.classList.remove('d-none')
+  model.elementObject.messageDisplay.innerHTML = ''
   model.elementObject.messageInputContainer.classList.remove('d-none')
 }
 

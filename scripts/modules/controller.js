@@ -8,20 +8,35 @@ export async function fetchData (url) {
   }
 }
 
-export function saveToLocalStorage (localStorageKey, data) {
-  // setItem only once
-  if (window.localStorage.getItem(localStorageKey) === null) {
+export const storage = {
+  save (localStorageKey, data) {
+    // setItem only once
+    if (window.localStorage.getItem(localStorageKey) === null) {
+      window.localStorage.setItem(localStorageKey, JSON.stringify(data))
+    }
+  },
+  update (localStorageKey, data) {
     window.localStorage.setItem(localStorageKey, JSON.stringify(data))
+  },
+  retrieve (localStorageKey) {
+    return JSON.parse(window.localStorage.getItem(localStorageKey))
   }
 }
 
-export function updateLocalStorage (localStorageKey, data) {
-  window.localStorage.setItem(localStorageKey, JSON.stringify(data))
-}
+// export function saveToLocalStorage (localStorageKey, data) {
+//   // setItem only once
+//   if (window.localStorage.getItem(localStorageKey) === null) {
+//     window.localStorage.setItem(localStorageKey, JSON.stringify(data))
+//   }
+// }
 
-export function retrieveFromLocalStorage (localStorageKey) {
-  return JSON.parse(window.localStorage.getItem(localStorageKey))
-}
+// export function updateLocalStorage (localStorageKey, data) {
+//   window.localStorage.setItem(localStorageKey, JSON.stringify(data))
+// }
+
+// export function retrieveFromLocalStorage (localStorageKey) {
+//   return JSON.parse(window.localStorage.getItem(localStorageKey))
+// }
 
 export function updateOnlineFriend (dataArray, onlineNumber) {
   // reset all current online friends
@@ -54,7 +69,7 @@ export function saveMessageToLocalStorage (dataArrayToUpdate, nowChatWithId, mes
         : data.log.push({ speakId: -1, log: message })
     }
   })
-  updateLocalStorage('chatLog', dataArrayToUpdate)
+  storage.update('chatLog', dataArrayToUpdate)
 }
 
 export function sortFriendListByPinAndOnlineStatus (dataArray) {
@@ -133,7 +148,7 @@ function addEmojiToSentences (sentences, emoji) {
 
 export function updateNickName (id) {
   const newNickname = document.querySelector('#nicknameInput').value.trim()
-  const friendList = retrieveFromLocalStorage('friendList')
+  const friendList = storage.retrieve('friendList')
 
   friendList.forEach(friend => {
     if (friend.id === id) {
@@ -142,5 +157,5 @@ export function updateNickName (id) {
         : friend.nickname = newNickname
     }
   })
-  updateLocalStorage('friendList', friendList)
+  storage.update('friendList', friendList)
 }
