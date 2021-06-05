@@ -102,7 +102,6 @@ function addEventListenerToFriendModalNameEditIcon (id) {
   document.querySelector(`[data-edit-name="${id}"]`).addEventListener('click', event => {
     if (event.target.dataset.editName) {
       const editIcon = event.target
-      console.log(Number(event.target.dataset.editName)) // test
       view.displayNameEditInput(editIcon, Number(id))
       addEventListenerToConfirmEdit(id)
     }
