@@ -87,7 +87,7 @@ export function displayFriendModal (dataArray, target, displayNickname) {
       </div>
       <div class="modal-body d-flex flex-column align-items-center">
         <div class="hako-modal-background">
-          <img src="https://picsum.photos/id/${dataArray.backgroundImageId}/600">
+          <img src="https://picsum.photos/id/${dataArray.backgroundImageId}/300/240">
         </div>
         <img src="${dataArray.avatar}" alt="avatar" class="rounded-circle mb-2 hako-modal-avatar">
         <div class="d-flex align-items-center hako-modal-name">
