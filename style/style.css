@@ -3,10 +3,6 @@ body {
   background-color: #f2e6d7;
 }
 
-main {
-  background-color: #f2f2f2;
-}
-
 .hako-title-section, #ceremonyMessage {
   font-family: 'Nanum Pen Script', cursive;
 }
@@ -24,6 +20,7 @@ main {
 }
 
 .hako-container {
+  background-color: #f2f2f2;
   width: 600px;
   height: 80vh;
   border: 1px solid #000;
