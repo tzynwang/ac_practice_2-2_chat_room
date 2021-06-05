@@ -64,13 +64,15 @@ export function sortFriendListByPinAndOnlineStatus (dataArray) {
   const rest = []
 
   dataArray.forEach(data => {
-    data.pin && data.online
-      ? pinAndOnline.push(data)
-      : data.pin
-        ? pin.push(data)
-        : data.online
-          ? online.push(data)
-          : rest.push(data)
+    if (data.pin && data.online) {
+      pinAndOnline.push(data)
+    } else if (data.pin && !data.online) {
+      pin.push(data)
+    } else if (data.online && !data.pin) {
+      online.push(data)
+    } else {
+      rest.push(data)
+    }
   })
 
   // sort rest array by id
