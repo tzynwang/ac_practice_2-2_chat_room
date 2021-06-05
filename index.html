@@ -16,10 +16,23 @@
 <body>
   <section class="my-3 text-center hako-title-section">
     <h1>HAKO</h1>
-    <p class="text-uppercase fw-light">hug your hardcore <i class="bi bi-heart-half"></i></p>
+    <p class="text-uppercase fw-light px-5">hug your hardcore <i class="bi bi-heart-half"></i></p>
   </section>
 
-  <main class="hako-container d-flex">
+  <main class="container d-flex flex-column align-items-center d-md-none">
+    <figure class="px-5 pt-3">
+      <blockquote class="blockquote">
+        <p>Need more space for self-displaying.</p>
+      </blockquote>
+      <figcaption class="blockquote-footer">
+        Device's screen width is not enough for running this project 💔
+      </figcaption>
+    </figure>
+    
+    <img class="w-100 px-5" src="./images/undraw_work_in_progress_uhmv.svg">
+  </main>
+
+  <main class="hako-container d-none d-md-flex ">
     <!-- friend list -->
     <section id="friendList" class="list-group list-group-flush hako-friend-list">
     </section>
