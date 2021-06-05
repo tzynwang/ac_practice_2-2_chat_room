@@ -131,12 +131,13 @@ function addEmojiToSentences (sentences, emoji) {
 
 export function updateNickName (id) {
   const newNickname = document.querySelector('#nicknameInput').value.trim()
-  if (newNickname.length <= 0) return
-
   const friendList = retrieveFromLocalStorage('friendList')
+
   friendList.forEach(friend => {
     if (friend.id === id) {
-      friend.nickname = newNickname
+      newNickname.length <= 0
+        ? friend.nickname = false
+        : friend.nickname = newNickname
     }
   })
   updateLocalStorage('friendList', friendList)
