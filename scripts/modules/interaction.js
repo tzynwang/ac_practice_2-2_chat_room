@@ -1,9 +1,9 @@
 import { fetchData, storage, update, get, sort } from './controller.js'
-import * as view from './view.js'
+import { modal, display, toggle, scroll } from './view.js'
 import * as model from './model.js'
 
 export async function loadFriendList () {
-  view.displayLoadingSpin(model.elementObject.friendList)
+  display.loadingSpin(model.elementObject.friendList)
   let friendList = storage.retrieve('friendList')
 
   if (!friendList) {
@@ -13,7 +13,7 @@ export async function loadFriendList () {
   const sortedFriendList = rePickOnlineFriends(friendList, 30)
   const displayNickname = storage.retrieve('hakoConfig').displayNickname
   setTimeout(() => {
-    view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNickname)
+    display.friendList(sortedFriendList, model.elementObject.friendList, displayNickname)
   }, 300)
 }
 
@@ -68,7 +68,7 @@ export function checkIfCeremonyDate () {
   if (ceremonyDate === todayForCheck && config.hasDisplayCeremonyMessage === false) {
     const todayString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     const username = config.username
-    view.displayCeremonyModal(model.elementObject.ceremonyMessageContainer, todayString, username)
+    modal.ceremony(model.elementObject.ceremonyMessageContainer, todayString, username)
     document.querySelector('#ceremonyCard').click()
 
     config.hasDisplayCeremonyMessage = true
@@ -78,12 +78,12 @@ export function checkIfCeremonyDate () {
 
 export async function displayPersonalInfoModal (id) {
   id = Number(id)
-  view.displayEmptyFriendModal(model.elementObject.friendModal)
+  modal.friendEmpty(model.elementObject.friendModal)
   const friends = storage.retrieve('friendList')
   const friend = friends.find(friend => friend.id === id)
   setTimeout(() => {
     const displayNickname = storage.retrieve('hakoConfig').displayNickname
-    view.displayFriendModal(friend, model.elementObject.friendModal, displayNickname)
+    modal.friend(friend, model.elementObject.friendModal, displayNickname)
     addEventListenerToFriendModalChatIcon(id)
     addEventListenerToFriendModalNameEditIcon(id)
   }, 300)
@@ -102,7 +102,7 @@ function addEventListenerToFriendModalNameEditIcon (id) {
   document.querySelector(`[data-edit-name="${id}"]`).addEventListener('click', event => {
     if (event.target.dataset.editName) {
       const editIcon = event.target
-      view.displayNameEditInput(editIcon, Number(id))
+      display.nameEditInput(editIcon, Number(id))
       addEventListenerToConfirmEdit(id)
     }
   })
@@ -113,7 +113,8 @@ function addEventListenerToConfirmEdit (id) {
     update.nickName(id)
     const friendList = storage.retrieve('friendList')
     const displayNickname = storage.retrieve('hakoConfig').displayNickname
-    view.displayFriendList(friendList, model.elementObject.friendList, displayNickname)
+    const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
+    display.friendList(sortedFriendList, model.elementObject.friendList, displayNickname)
     document.querySelector('.modal .btn-close').click()
   })
 }
@@ -123,17 +124,17 @@ export async function chatTo (id) {
   if (id === model.templateData.nowChatWith) return
 
   // if not means a new chat target
-  view.displayChatConsole()
-  view.toggleActiveClassForClickedFriend(id)
+  display.chatConsole()
+  toggle.activeFriend(id)
 
   const friendList = storage.retrieve('friendList')
   const friendData = friendList.find(friend => friend.id === id)
-  view.updateFriendNameInChatArea(document.querySelector('#friendNameDisplay'), friendData)
+  display.friendNameInChatConsole(document.querySelector('#friendNameDisplay'), friendData)
 
   const allChatLog = storage.retrieve('chatLog')
   const previousChatLogWithId = get.previousChatLog(id, allChatLog)
-  view.displayChatLogOnScreen(model.elementObject.messageDisplay, previousChatLogWithId)
-  view.scrollToBottom()
+  display.allChatLog(model.elementObject.messageDisplay, previousChatLogWithId)
+  scroll.bottom()
 
   model.templateData.nowChatWith = id
 }
@@ -144,11 +145,11 @@ async function displayFriendChat (friendRepliesArray, allChatLog, nowChatWithId)
       // prevent message display when switch to another friend
       const messageDisplayChatTo = Number(model.elementObject.messageDisplay.dataset.nowChatWith)
       if (messageDisplayChatTo === model.templateData.nowChatWith) {
-        view.addOneMessageOnScreen(model.elementObject.messageDisplay, friendRepliesArray[index], true)
+        display.singleMessage(model.elementObject.messageDisplay, friendRepliesArray[index], true)
       }
 
       storage.saveMessage(allChatLog, nowChatWithId, friendRepliesArray[index], true)
-      view.scrollToBottom()
+      scroll.bottom()
     }, (1000 * index) + Math.floor(Math.random() * 300))
   }
 }
@@ -161,8 +162,8 @@ export async function sendChatMessage (event) {
 
     const userInput = model.elementObject.messageInput.value.trim()
     if (userInput.length !== 0) {
-      view.addOneMessageOnScreen(model.elementObject.messageDisplay, userInput)
-      view.scrollToBottom()
+      display.singleMessage(model.elementObject.messageDisplay, userInput)
+      scroll.bottom()
 
       const nowChatWithId = model.templateData.nowChatWith
       const allChatLog = storage.retrieve('chatLog')
@@ -186,15 +187,15 @@ export async function sendChatMessage (event) {
 
 export function pinFriend (id) {
   id = Number(id)
-  view.togglePinIcon(id)
-  view.scrollToTop()
+  toggle.pinIcon(id)
+  scroll.top()
 
   const friendList = storage.retrieve('friendList')
   update.pinStatus(friendList, id)
 
   const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
   const displayNickname = storage.retrieve('hakoConfig').displayNickname
-  view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNickname)
+  display.friendList(sortedFriendList, model.elementObject.friendList, displayNickname)
 
   storage.update('friendList', sortedFriendList)
 }
@@ -206,7 +207,7 @@ export function setSettingModal () {
 
 function displaySettingModalByConfig () {
   const config = storage.retrieve('hakoConfig')
-  view.updateSettingModal(document.querySelector('#personalSettingsPanel'), config)
+  modal.setting(document.querySelector('#personalSettingsPanel'), config)
 }
 
 function saveImgToLocalStorageAsBase64 (avatarFile) {
@@ -239,7 +240,7 @@ function addEventListenerToSaveSettingBtn () {
     const displayNicknameFlag = storage.retrieve('hakoConfig').displayNickname
 
     const sortedFriendList = rePickOnlineFriends(friendList, 30)
-    view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNicknameFlag)
+    display.friendList(sortedFriendList, model.elementObject.friendList, displayNicknameFlag)
 
     document.querySelector('#closeSettingPanel').click()
   })
@@ -252,7 +253,7 @@ export function setUserAvatarModal () {
 
 function displayUserAvatarModal () {
   const config = storage.retrieve('hakoConfig')
-  view.displayUserAvatarModal(document.querySelector('#userPersonalPanel'), config)
+  modal.userAvatar(document.querySelector('#userPersonalPanel'), config)
 }
 
 function addEventListenerToUserAvatarModalEditBtn () {
