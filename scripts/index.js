@@ -1,22 +1,20 @@
-import * as model from './modules/model.js'
-import * as interaction from './modules/interaction.js'
+import { elementObject } from './modules/model.js'
+import { establish, chatTo, show, pinFriend, sendChatMessage } from './modules/interaction.js'
 
-interaction.establishChatLogInLocalStorage()
-interaction.establishConfigInLocalStorage()
-interaction.loadFriendList()
-interaction.checkIfCeremonyDate()
+establish.initialSettings()
 
-model.elementObject.friendList.addEventListener('click', event => {
+elementObject.friendList.addEventListener('click', event => {
   const friendId = event.target.dataset.id
   const chatId = event.target.dataset.chat
   const pinId = event.target.dataset.pin
-  if (chatId) interaction.chatTo(chatId)
-  if (friendId) interaction.displayPersonalInfoModal(friendId)
-  if (pinId) interaction.pinFriend(pinId)
+
+  if (chatId) chatTo(chatId)
+  if (friendId) show.friendModal(friendId)
+  if (pinId) pinFriend(pinId)
 })
 
-model.elementObject.messageInputForm.addEventListener('keydown', interaction.sendChatMessage)
+elementObject.messageInputForm.addEventListener('keydown', sendChatMessage)
 
-model.elementObject.userAvatarBtn.addEventListener('click', interaction.setUserAvatarModal)
+elementObject.userAvatarBtn.addEventListener('click', show.userModal)
 
-model.elementObject.settingBtn.addEventListener('click', interaction.setSettingModal)
+elementObject.settingBtn.addEventListener('click', show.settingPanel)
