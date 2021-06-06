@@ -24,9 +24,9 @@ export const establish = {
     }
 
     const sortedFriendList = pickOnlineAndSort(friendList, 30)
-    const displayNickname = storage.retrieve('hakoConfig').displayNickname
+    const nickNameFlag = storage.retrieve('hakoConfig').displayNickname
     setTimeout(() => {
-      display.friendList(sortedFriendList, elementObject.friendList, displayNickname)
+      display.friendList(sortedFriendList, elementObject.friendList, nickNameFlag)
     }, 300)
   },
   ceremonyMessage () {
@@ -62,8 +62,8 @@ export const show = {
     const friends = storage.retrieve('friendList')
     const friend = friends.find(friend => friend.id === id)
     setTimeout(() => {
-      const displayNickname = storage.retrieve('hakoConfig').displayNickname
-      modal.friend(friend, elementObject.friendModal, displayNickname)
+      const nickNameFlag = storage.retrieve('hakoConfig').displayNickname
+      modal.friend(friend, elementObject.friendModal, nickNameFlag)
       addListener.friendModalChatIcon(id)
       addListener.friendModalNameEditIcon(id)
     }, 300)
@@ -121,8 +121,8 @@ export function pinFriend (id) {
   update.pinStatus(friendList, id)
 
   const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
-  const displayNickname = storage.retrieve('hakoConfig').displayNickname
-  display.friendList(sortedFriendList, elementObject.friendList, displayNickname)
+  const nickNameFlag = storage.retrieve('hakoConfig').displayNickname
+  display.friendList(sortedFriendList, elementObject.friendList, nickNameFlag)
 
   storage.update('friendList', sortedFriendList)
 }
@@ -227,9 +227,9 @@ const addListener = {
     document.querySelector(`[data-confirm-edit="${id}"]`).addEventListener('click', () => {
       update.nickName(id)
       const friendList = storage.retrieve('friendList')
-      const displayNickname = storage.retrieve('hakoConfig').displayNickname
+      const nickNameFlag = storage.retrieve('hakoConfig').displayNickname
       const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
-      display.friendList(sortedFriendList, elementObject.friendList, displayNickname)
+      display.friendList(sortedFriendList, elementObject.friendList, nickNameFlag)
       document.querySelector('.modal .btn-close').click()
     })
   },
@@ -240,13 +240,13 @@ const addListener = {
 
       const username = document.querySelector('#username').value
       const ceremonyDate = document.querySelector('#ceremony').value
-      const displayNickname = document.querySelector('#displayNickname').checked
+      const nickNameFlag = document.querySelector('#displayNickname').checked
 
       const config = storage.retrieve('hakoConfig')
 
       if (username.trim().length > 0) config.username = username
       if (ceremonyDate.length > 0) config.ceremonyDate = ceremonyDate
-      if (config.displayNickname !== displayNickname) config.displayNickname = displayNickname
+      if (config.displayNickname !== nickNameFlag) config.displayNickname = nickNameFlag
       storage.update('hakoConfig', config)
 
       const friendList = storage.retrieve('friendList')
