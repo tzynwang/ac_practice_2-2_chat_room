@@ -10,7 +10,7 @@ https://tzynwang.github.io/ac_practice_2-2_chat_room/
   - 回應訊息中的emoji透過 [Open Emoji Api](https://emoji-api.com/) 取得
 - 可釘選（![pin-icon](./images/README-img/pin.svg)）特定朋友至左側訊息欄位最上方
   ![pin friend demonstration](./images/README-img/pinFriend.gif)
-- 訊息欄位由上至下的排序為：上線且被釘選的朋友、釘選的朋友、上線的朋友、其餘未上限且未被釘選的朋友
+- 訊息欄位由上至下的排序為：上線且被釘選的朋友、釘選的朋友、上線的朋友、其餘未上線且未被釘選的朋友
 - 點選訊息欄位中朋友的大頭貼，可編輯朋友暱稱
   ![nickname edit demonstration](./images/README-img/editAndDisplayNickname.gif)
   - 點選右下角的設定（![setting-icon](./images/README-img/gear-fill.svg)），切換至Display標籤，可選擇是否顯示朋友暱稱
