@@ -1,64 +1,64 @@
-import * as controller from './controller.js'
+import { fetchData, storage, update, get, sort } from './controller.js'
 import * as view from './view.js'
 import * as model from './model.js'
 
 export async function loadFriendList () {
   view.displayLoadingSpin(model.elementObject.friendList)
-  let friendList = controller.storage.retrieve('friendList')
+  let friendList = storage.retrieve('friendList')
 
   if (!friendList) {
     friendList = await generateFriendList()
   }
 
   const sortedFriendList = rePickOnlineFriends(friendList, 30)
-  const displayNickname = controller.storage.retrieve('hakoConfig').displayNickname
+  const displayNickname = storage.retrieve('hakoConfig').displayNickname
   setTimeout(() => {
     view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNickname)
   }, 300)
 }
 
 async function generateFriendList () {
-  const friends = await controller.fetchData(model.config.friendListApi)
+  const friends = await fetchData(model.config.friendListApi)
   // fetch background image's id
-  const picsums100 = await controller.fetchData(`${model.config.picsumApi}?page=3&limit=100`)
-  const picsums200 = await controller.fetchData(`${model.config.picsumApi}?page=4&limit=100`)
+  const picsums100 = await fetchData(`${model.config.picsumApi}?page=3&limit=100`)
+  const picsums200 = await fetchData(`${model.config.picsumApi}?page=4&limit=100`)
   const picsums = picsums100.data.concat(picsums200.data)
   friends.data.results.forEach(function (friend, index) {
     friend.backgroundImageId = Number(picsums[index].id)
   })
-  controller.storage.save('friendList', friends.data.results)
-  return controller.storage.retrieve('friendList')
+  storage.save('friendList', friends.data.results)
+  return storage.retrieve('friendList')
 }
 
 function rePickOnlineFriends (friendList, minutes) {
   const currentTimeStamp = Date.now()
-  const lastUpdateTimeStamp = controller.storage.retrieve('lastOnlineUserUpdateTimeStamp')
+  const lastUpdateTimeStamp = storage.retrieve('lastOnlineUserUpdateTimeStamp')
 
   if (!lastUpdateTimeStamp || currentTimeStamp - lastUpdateTimeStamp > minutes * 60 * 1000) {
     const nowOnlineNumber = Math.floor(Math.random() * (model.config.maxOnlineNumber - model.config.minOnlineNumber)) + model.config.minOnlineNumber
-    controller.updateOnlineFriend(friendList, nowOnlineNumber)
-    controller.storage.update('lastOnlineUserUpdateTimeStamp', currentTimeStamp)
-    controller.storage.update('friendList', friendList)
+    update.onlineFriend(friendList, nowOnlineNumber)
+    storage.update('lastOnlineUserUpdateTimeStamp', currentTimeStamp)
+    storage.update('friendList', friendList)
   }
-  return controller.sortFriendListByPinAndOnlineStatus(friendList)
+  return sort.byPinAndOnlineStatus(friendList)
 }
 
 export function establishChatLogInLocalStorage () {
-  if (!controller.storage.retrieve('chatLog')) {
+  if (!storage.retrieve('chatLog')) {
     const chatLogContainer = []
-    controller.storage.save('chatLog', chatLogContainer)
+    storage.save('chatLog', chatLogContainer)
   }
 }
 
 export function establishConfigInLocalStorage () {
-  if (!controller.storage.retrieve('hakoConfig')) {
+  if (!storage.retrieve('hakoConfig')) {
     const hakoConfig = { userAvatarBase64: '', username: '', ceremonyDate: '', displayNickname: true, hasDisplayCeremonyMessage: false }
-    controller.storage.save('hakoConfig', hakoConfig)
+    storage.save('hakoConfig', hakoConfig)
   }
 }
 
 export function checkIfCeremonyDate () {
-  const config = controller.storage.retrieve('hakoConfig')
+  const config = storage.retrieve('hakoConfig')
   if (!config) return
 
   const today = new Date()
@@ -72,17 +72,17 @@ export function checkIfCeremonyDate () {
     document.querySelector('#ceremonyCard').click()
 
     config.hasDisplayCeremonyMessage = true
-    controller.storage.update('hakoConfig', config)
+    storage.update('hakoConfig', config)
   }
 }
 
 export async function displayPersonalInfoModal (id) {
   id = Number(id)
   view.displayEmptyFriendModal(model.elementObject.friendModal)
-  const friends = controller.storage.retrieve('friendList')
+  const friends = storage.retrieve('friendList')
   const friend = friends.find(friend => friend.id === id)
   setTimeout(() => {
-    const displayNickname = controller.storage.retrieve('hakoConfig').displayNickname
+    const displayNickname = storage.retrieve('hakoConfig').displayNickname
     view.displayFriendModal(friend, model.elementObject.friendModal, displayNickname)
     addEventListenerToFriendModalChatIcon(id)
     addEventListenerToFriendModalNameEditIcon(id)
@@ -110,9 +110,9 @@ function addEventListenerToFriendModalNameEditIcon (id) {
 
 function addEventListenerToConfirmEdit (id) {
   document.querySelector(`[data-confirm-edit="${id}"]`).addEventListener('click', () => {
-    controller.updateNickName(id)
-    const friendList = controller.storage.retrieve('friendList')
-    const displayNickname = controller.storage.retrieve('hakoConfig').displayNickname
+    update.nickName(id)
+    const friendList = storage.retrieve('friendList')
+    const displayNickname = storage.retrieve('hakoConfig').displayNickname
     view.displayFriendList(friendList, model.elementObject.friendList, displayNickname)
     document.querySelector('.modal .btn-close').click()
   })
@@ -126,12 +126,12 @@ export async function chatTo (id) {
   view.displayChatConsole()
   view.toggleActiveClassForClickedFriend(id)
 
-  const friendList = controller.storage.retrieve('friendList')
+  const friendList = storage.retrieve('friendList')
   const friendData = friendList.find(friend => friend.id === id)
   view.updateFriendNameInChatArea(document.querySelector('#friendNameDisplay'), friendData)
 
-  const allChatLog = controller.storage.retrieve('chatLog')
-  const previousChatLogWithId = controller.getPreviousChatLog(id, allChatLog)
+  const allChatLog = storage.retrieve('chatLog')
+  const previousChatLogWithId = get.previousChatLog(id, allChatLog)
   view.displayChatLogOnScreen(model.elementObject.messageDisplay, previousChatLogWithId)
   view.scrollToBottom()
 
@@ -147,7 +147,7 @@ async function displayFriendChat (friendRepliesArray, allChatLog, nowChatWithId)
         view.addOneMessageOnScreen(model.elementObject.messageDisplay, friendRepliesArray[index], true)
       }
 
-      controller.saveMessageToLocalStorage(allChatLog, nowChatWithId, friendRepliesArray[index], true)
+      storage.saveMessage(allChatLog, nowChatWithId, friendRepliesArray[index], true)
       view.scrollToBottom()
     }, (1000 * index) + Math.floor(Math.random() * 300))
   }
@@ -165,17 +165,17 @@ export async function sendChatMessage (event) {
       view.scrollToBottom()
 
       const nowChatWithId = model.templateData.nowChatWith
-      const allChatLog = controller.storage.retrieve('chatLog')
-      controller.saveMessageToLocalStorage(allChatLog, nowChatWithId, userInput)
+      const allChatLog = storage.retrieve('chatLog')
+      storage.saveMessage(allChatLog, nowChatWithId, userInput)
 
       // clear message input textarea
       model.elementObject.messageInputFormResetBtn.click()
 
       // if friend online, auto reply
-      const friendList = controller.storage.retrieve('friendList')
+      const friendList = storage.retrieve('friendList')
       const friendData = friendList.find(friend => friend.id === nowChatWithId)
       if (friendData.online === true) {
-        const friendRepliesArray = await controller.getFriendReply()
+        const friendRepliesArray = await get.friendReply()
         // mark auto reply message from which friend ID
         model.elementObject.messageDisplay.dataset.nowChatWith = nowChatWithId
         await displayFriendChat(friendRepliesArray, allChatLog, nowChatWithId)
@@ -189,14 +189,14 @@ export function pinFriend (id) {
   view.togglePinIcon(id)
   view.scrollToTop()
 
-  const friendList = controller.storage.retrieve('friendList')
-  controller.updatePinStatus(friendList, id)
+  const friendList = storage.retrieve('friendList')
+  update.pinStatus(friendList, id)
 
-  const sortedFriendList = controller.sortFriendListByPinAndOnlineStatus(friendList)
-  const displayNickname = controller.storage.retrieve('hakoConfig').displayNickname
+  const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
+  const displayNickname = storage.retrieve('hakoConfig').displayNickname
   view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNickname)
 
-  controller.storage.update('friendList', sortedFriendList)
+  storage.update('friendList', sortedFriendList)
 }
 
 export function setSettingModal () {
@@ -205,7 +205,7 @@ export function setSettingModal () {
 }
 
 function displaySettingModalByConfig () {
-  const config = controller.storage.retrieve('hakoConfig')
+  const config = storage.retrieve('hakoConfig')
   view.updateSettingModal(document.querySelector('#personalSettingsPanel'), config)
 }
 
@@ -213,9 +213,9 @@ function saveImgToLocalStorageAsBase64 (avatarFile) {
   const reader = new window.FileReader()
   reader.readAsDataURL(avatarFile)
   reader.onload = () => {
-    const config = controller.storage.retrieve('hakoConfig')
+    const config = storage.retrieve('hakoConfig')
     config.userAvatarBase64 = reader.result
-    controller.storage.update('hakoConfig', config)
+    storage.update('hakoConfig', config)
   }
 }
 
@@ -228,15 +228,15 @@ function addEventListenerToSaveSettingBtn () {
     const ceremonyDate = document.querySelector('#ceremony').value
     const displayNickname = document.querySelector('#displayNickname').checked
 
-    const config = controller.storage.retrieve('hakoConfig')
+    const config = storage.retrieve('hakoConfig')
 
     if (username.trim().length > 0) config.username = username
     if (ceremonyDate.length > 0) config.ceremonyDate = ceremonyDate
     if (config.displayNickname !== displayNickname) config.displayNickname = displayNickname
-    controller.storage.update('hakoConfig', config)
+    storage.update('hakoConfig', config)
 
-    const friendList = controller.storage.retrieve('friendList')
-    const displayNicknameFlag = controller.storage.retrieve('hakoConfig').displayNickname
+    const friendList = storage.retrieve('friendList')
+    const displayNicknameFlag = storage.retrieve('hakoConfig').displayNickname
 
     const sortedFriendList = rePickOnlineFriends(friendList, 30)
     view.displayFriendList(sortedFriendList, model.elementObject.friendList, displayNicknameFlag)
@@ -251,7 +251,7 @@ export function setUserAvatarModal () {
 }
 
 function displayUserAvatarModal () {
-  const config = controller.storage.retrieve('hakoConfig')
+  const config = storage.retrieve('hakoConfig')
   view.displayUserAvatarModal(document.querySelector('#userPersonalPanel'), config)
 }
 
