@@ -2,13 +2,11 @@ import * as model from './model.js'
 
 export const modal = {
   ceremony (target, todayString, username) {
+    const message = username
+      ? `Hi ${username}! Today is ${todayString}, it's your special day!`
+      : `Today is ${todayString}, you've said this is a spacial day!`
+
     target.innerHTML = ''
-
-    let message
-    username
-      ? message = `Hi ${username}! Today is ${todayString}, it's your special day!`
-      : message = `Today is ${todayString}, you've said this is a spacial day!`
-
     target.innerHTML = `
     <button type="button" id="ceremonyCard" class="visually-hidden" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></button>
 
@@ -41,8 +39,10 @@ export const modal = {
   </div>`
   },
   friend (dataArray, target, displayNickname) {
-    let displayName
-    displayNickname ? displayName = dataArray.nickname || `${dataArray.name} ${dataArray.surname}` : displayName = `${dataArray.name} ${dataArray.surname}`
+    const displayName = displayNickname
+      ? dataArray.nickname || `${dataArray.name} ${dataArray.surname}`
+      : `${dataArray.name} ${dataArray.surname}`
+
     target.innerHTML = `
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -121,8 +121,8 @@ export const modal = {
   </div>`
   },
   userAvatar (target, dataArray) {
-    let name
-    dataArray.username ? name = dataArray.username : name = 'your name here?'
+    const name = dataArray.username ? dataArray.username : 'your name here?'
+
     target.innerHTML = ''
     target.innerHTML = `
   <div class="modal-dialog modal-sm">
@@ -154,14 +154,17 @@ export const display = {
   friendList (dataArray, target, displayNickname) {
     target.innerHTML = ''
     dataArray.forEach(data => {
-      let onlineStatusClass
-      data.online === true ? onlineStatusClass = 'bi-brightness-high-fill hako-online' : onlineStatusClass = 'bi-cloud-moon-fill hako-offline'
+      const onlineStatusClass = data.online === true
+        ? 'bi-brightness-high-fill hako-online'
+        : 'bi-cloud-moon-fill hako-offline'
 
-      let pinIconClass
-      data.pin === true ? pinIconClass = 'bi-pin-fill' : pinIconClass = 'bi-pin'
+      const pinIconClass = data.pin === true
+        ? 'bi-pin-fill'
+        : 'bi-pin'
 
-      let displayName
-      displayNickname ? displayName = data.nickname || `${data.name} ${data.surname}` : displayName = `${data.name} ${data.surname}`
+      const displayName = displayNickname
+        ? data.nickname || `${data.name} ${data.surname}` // if no nickname, display origin name
+        : `${data.name} ${data.surname}`
 
       target.insertAdjacentHTML('beforeend', `
     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-chat="${data.id}">
@@ -194,10 +197,9 @@ export const display = {
     target.remove()
   },
   friendNameInChatConsole (target, dataArray) {
-    target.innerHTML = ''
+    const textClass = dataArray.online ? 'bg-success' : 'bg-light text-dark'
 
-    let textClass = ''
-    dataArray.online ? textClass = 'bg-success' : textClass = 'bg-light text-dark'
+    target.innerHTML = ''
     target.insertAdjacentHTML('afterbegin', `
     <span class="ps-3 w-100 hako-friend-name ${textClass}">
       ${dataArray.name} ${dataArray.surname}

@@ -62,9 +62,7 @@ export const update = {
 
     friendList.forEach(friend => {
       if (friend.id === id) {
-        newNickname.length <= 0
-          ? friend.nickname = false
-          : friend.nickname = newNickname
+        friend.nickname = newNickname.length <= 0 ? false : newNickname
       }
     })
     storage.update('friendList', friendList)
