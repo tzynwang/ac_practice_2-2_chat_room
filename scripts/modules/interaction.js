@@ -1,6 +1,6 @@
 import { fetchData, storage, update, get, sort } from './controller.js'
 import { modal, display, toggle, scroll } from './view.js'
-import * as model from './model.js'
+import { elementObject, config, templateData } from './model.js'
 
 export const establish = {
   chatLog () {
@@ -16,7 +16,7 @@ export const establish = {
     }
   },
   async friendList () {
-    display.loadingSpin(model.elementObject.friendList)
+    display.loadingSpin(elementObject.friendList)
     let friendList = storage.retrieve('friendList')
 
     if (!friendList) {
@@ -26,7 +26,7 @@ export const establish = {
     const sortedFriendList = pickOnlineAndSort(friendList, 30)
     const displayNickname = storage.retrieve('hakoConfig').displayNickname
     setTimeout(() => {
-      display.friendList(sortedFriendList, model.elementObject.friendList, displayNickname)
+      display.friendList(sortedFriendList, elementObject.friendList, displayNickname)
     }, 300)
   },
   ceremonyMessage () {
@@ -40,7 +40,7 @@ export const establish = {
     if (ceremonyDate === todayForCheck && config.hasDisplayCeremonyMessage === false) {
       const todayString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
       const username = config.username
-      modal.ceremony(model.elementObject.ceremonyMessageContainer, todayString, username)
+      modal.ceremony(elementObject.ceremonyMessageContainer, todayString, username)
       document.querySelector('#ceremonyCard').click()
 
       config.hasDisplayCeremonyMessage = true
@@ -58,12 +58,12 @@ export const establish = {
 export const show = {
   friendModal (id) {
     id = Number(id)
-    modal.friendEmpty(model.elementObject.friendModal)
+    modal.friendEmpty(elementObject.friendModal)
     const friends = storage.retrieve('friendList')
     const friend = friends.find(friend => friend.id === id)
     setTimeout(() => {
       const displayNickname = storage.retrieve('hakoConfig').displayNickname
-      modal.friend(friend, model.elementObject.friendModal, displayNickname)
+      modal.friend(friend, elementObject.friendModal, displayNickname)
       addListener.friendModalChatIcon(id)
       addListener.friendModalNameEditIcon(id)
     }, 300)
@@ -72,9 +72,9 @@ export const show = {
     for (const index in friendRepliesArray) {
       setTimeout(() => {
         // prevent message display when switch to another friend
-        const messageDisplayChatTo = Number(model.elementObject.messageDisplay.dataset.nowChatWith)
-        if (messageDisplayChatTo === model.templateData.nowChatWith) {
-          display.singleMessage(model.elementObject.messageDisplay, friendRepliesArray[index], true)
+        const messageDisplayChatTo = Number(elementObject.messageDisplay.dataset.nowChatWith)
+        if (messageDisplayChatTo === templateData.nowChatWith) {
+          display.singleMessage(elementObject.messageDisplay, friendRepliesArray[index], true)
         }
 
         storage.saveMessage(allChatLog, nowChatWithId, friendRepliesArray[index], true)
@@ -94,7 +94,7 @@ export const show = {
 
 export async function chatTo (id) {
   id = Number(id)
-  if (id === model.templateData.nowChatWith) return
+  if (id === templateData.nowChatWith) return
 
   // if not means a new chat target
   display.chatConsole()
@@ -106,10 +106,10 @@ export async function chatTo (id) {
 
   const allChatLog = storage.retrieve('chatLog')
   const previousChatLogWithId = get.previousChatLog(id, allChatLog)
-  display.allChatLog(model.elementObject.messageDisplay, previousChatLogWithId)
+  display.allChatLog(elementObject.messageDisplay, previousChatLogWithId)
   scroll.bottom()
 
-  model.templateData.nowChatWith = id
+  templateData.nowChatWith = id
 }
 
 export function pinFriend (id) {
@@ -122,7 +122,7 @@ export function pinFriend (id) {
 
   const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
   const displayNickname = storage.retrieve('hakoConfig').displayNickname
-  display.friendList(sortedFriendList, model.elementObject.friendList, displayNickname)
+  display.friendList(sortedFriendList, elementObject.friendList, displayNickname)
 
   storage.update('friendList', sortedFriendList)
 }
@@ -133,17 +133,17 @@ export async function sendChatMessage (event) {
     // prevent line break in textarea
     event.preventDefault()
 
-    const userInput = model.elementObject.messageInput.value.trim()
+    const userInput = elementObject.messageInput.value.trim()
     if (userInput.length !== 0) {
-      display.singleMessage(model.elementObject.messageDisplay, userInput)
+      display.singleMessage(elementObject.messageDisplay, userInput)
       scroll.bottom()
 
-      const nowChatWithId = model.templateData.nowChatWith
+      const nowChatWithId = templateData.nowChatWith
       const allChatLog = storage.retrieve('chatLog')
       storage.saveMessage(allChatLog, nowChatWithId, userInput)
 
       // clear message input textarea
-      model.elementObject.messageInputFormResetBtn.click()
+      elementObject.messageInputFormResetBtn.click()
 
       // if friend online, auto reply
       const friendList = storage.retrieve('friendList')
@@ -151,7 +151,7 @@ export async function sendChatMessage (event) {
       if (friendData.online === true) {
         const friendRepliesArray = await get.friendReply()
         // mark auto reply message from which friend ID
-        model.elementObject.messageDisplay.dataset.nowChatWith = nowChatWithId
+        elementObject.messageDisplay.dataset.nowChatWith = nowChatWithId
         await show.friendReply(friendRepliesArray, allChatLog, nowChatWithId)
       }
     }
@@ -159,10 +159,10 @@ export async function sendChatMessage (event) {
 }
 
 async function generateFriendList () {
-  const friends = await fetchData(model.config.friendListApi)
+  const friends = await fetchData(config.friendListApi)
   // fetch background image's id
-  const picsums100 = await fetchData(`${model.config.picsumApi}?page=3&limit=100`)
-  const picsums200 = await fetchData(`${model.config.picsumApi}?page=4&limit=100`)
+  const picsums100 = await fetchData(`${config.picsumApi}?page=3&limit=100`)
+  const picsums200 = await fetchData(`${config.picsumApi}?page=4&limit=100`)
   const picsums = picsums100.data.concat(picsums200.data)
   friends.data.results.forEach(function (friend, index) {
     friend.backgroundImageId = Number(picsums[index].id)
@@ -176,7 +176,7 @@ function pickOnlineAndSort (friendList, minutes) {
   const lastUpdateTimeStamp = storage.retrieve('lastOnlineUserUpdateTimeStamp')
 
   if (!lastUpdateTimeStamp || currentTimeStamp - lastUpdateTimeStamp > minutes * 60 * 1000) {
-    const nowOnlineNumber = Math.floor(Math.random() * (model.config.maxOnlineNumber - model.config.minOnlineNumber)) + model.config.minOnlineNumber
+    const nowOnlineNumber = Math.floor(Math.random() * (config.maxOnlineNumber - config.minOnlineNumber)) + config.minOnlineNumber
     update.onlineFriend(friendList, nowOnlineNumber)
     storage.update('lastOnlineUserUpdateTimeStamp', currentTimeStamp)
     storage.update('friendList', friendList)
@@ -229,7 +229,7 @@ const addListener = {
       const friendList = storage.retrieve('friendList')
       const displayNickname = storage.retrieve('hakoConfig').displayNickname
       const sortedFriendList = sort.byPinAndOnlineStatus(friendList)
-      display.friendList(sortedFriendList, model.elementObject.friendList, displayNickname)
+      display.friendList(sortedFriendList, elementObject.friendList, displayNickname)
       document.querySelector('.modal .btn-close').click()
     })
   },
@@ -253,7 +253,7 @@ const addListener = {
       const displayNicknameFlag = storage.retrieve('hakoConfig').displayNickname
 
       const sortedFriendList = pickOnlineAndSort(friendList, 30)
-      display.friendList(sortedFriendList, model.elementObject.friendList, displayNicknameFlag)
+      display.friendList(sortedFriendList, elementObject.friendList, displayNicknameFlag)
 
       document.querySelector('#closeSettingPanel').click()
     })
@@ -261,7 +261,7 @@ const addListener = {
   userModalEditBtn () {
     document.querySelector('#editUserInfo').addEventListener('click', () => {
       document.querySelector('#userAvatar .btn-close').click()
-      model.elementObject.settingBtn.click()
+      elementObject.settingBtn.click()
     })
   }
 }
