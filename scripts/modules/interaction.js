@@ -55,7 +55,7 @@ export const establish = {
   },
   async registerSW () {
     if ('serviceWorker' in navigator) {
-      await navigator.serviceWorker.register('../../sw.js', { scope: '/ac_practice_2-2_chat_room/' })
+      await navigator.serviceWorker.register('/ac_practice_2-2_chat_room/sw.js', { scope: '/ac_practice_2-2_chat_room/' })
     }
   }
 }
