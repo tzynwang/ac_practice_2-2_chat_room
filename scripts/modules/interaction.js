@@ -52,6 +52,11 @@ export const establish = {
     this.config()
     this.friendList()
     this.ceremonyMessage()
+  },
+  async registerSW () {
+    if ('serviceWorker' in navigator) {
+      await navigator.serviceWorker.register('../../sw.js', { scope: '/' })
+    }
   }
 }
 

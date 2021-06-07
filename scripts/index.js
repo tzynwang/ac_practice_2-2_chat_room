@@ -1,6 +1,7 @@
 import { elementObject } from './modules/model.js'
 import { establish, chatTo, show, pinFriend, sendChatMessage } from './modules/interaction.js'
 
+establish.registerSW()
 establish.initialSettings()
 
 elementObject.friendList.addEventListener('click', event => {
