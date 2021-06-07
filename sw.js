@@ -14,9 +14,10 @@ self.addEventListener('fetch', event => {
     const cacheResponse = await cache.match(event.request)
     if (cacheResponse) return cacheResponse
 
-    if (event.request.destination === 'style' ||
+    if (event.request.destination === 'document' ||
+      event.request.destination === 'style' ||
       event.request.destination === 'script' ||
-      event.request.url.match(/.svg/i)) {
+      event.request.url.includes('svg')) {
       const fetchResponse = await fetch(event.request.url)
       if (!fetchResponse.ok) throw fetchResponse.statusText
       cache.put(event.request, fetchResponse.clone())
